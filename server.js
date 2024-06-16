@@ -13,7 +13,7 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-app.use(session());
+app.use(session({ secret: '123456', resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -58,9 +58,25 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
 });
 
 app.get('/feedbackPage', (req, res) => {
-  res.render('feedbackPage');
+  if (req.isAuthenticated()) {
+    res.render('feedbackPage', { user: req.user });
+  } else {
+    res.redirect('/');
+  }
+});
+
+app.get('/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      console.error(err);
+      return next(err);
+    }
+    res.redirect('/');
+  });
 });
 
 app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000');
 });
+
+

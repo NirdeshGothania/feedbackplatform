@@ -8,5 +8,9 @@
 </head>
 <body>
     <h1>Welcome to the Feedback Submission Platform</h1>
+    <p>Hello, <%= user.name %>!</p>
+    <form action="/logout" method="GET">
+        <button type="submit">Logout</button>
+    </form>
 </body>
 </html>
